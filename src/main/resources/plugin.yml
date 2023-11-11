@@ -2,3 +2,15 @@ name: WaypointEffect
 version: '${project.version}'
 main: org.nandeyanenw.waypointeffect.WaypointEffect
 api-version: '1.20'
+authors:
+  - 製作:ほたまちスバル（なんでやねんｗエンジニア部）
+  - © なんでやねんｗ 2023
+
+commands:
+  reload:
+    description: 設定を再読み込みします。
+    usage: /wp:reload
+permissions:
+  wp.reload:
+    description: 設定を再読み込みします。
+    default: op

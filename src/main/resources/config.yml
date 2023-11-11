@@ -1,0 +1,9 @@
+effects:
+  knockback:
+    cooldown: 300
+    strength: 10
+  immobilize:
+    cooldown: 1800
+    duration: 2
+  explosion:
+    cooldown: 600
