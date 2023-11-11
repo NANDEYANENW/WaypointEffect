@@ -16,10 +16,10 @@ public class ConfigManager {
     public void loadConfig(){
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
-        isKnockbackEnabled = config.getBoolean("effects.knockback",true);
-        isImmobilizeEnabled = config.getBoolean("effects.immobilize",true);
-        isExplosionEnabled = config.getBoolean("effects.explosion",true);
-        isNauseaEnabled = config.getBoolean("effect.nausea",true);
+        isKnockbackEnabled = config.getBoolean("effects.enable.knockback",true);
+        isImmobilizeEnabled = config.getBoolean("effects.enable.immobilize",true);
+        isExplosionEnabled = config.getBoolean("effects.enable.explosion",true);
+        isNauseaEnabled = config.getBoolean("effect.enable.nausea",true);
 
     }
 

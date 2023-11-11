@@ -19,10 +19,10 @@ public class EffectManager {
 
     public EffectManager(WaypointEffect plugin){
         this.plugin = plugin;
-        this.lastKnockbackEffectTime = new HashMap<>();
-        this.lastImmobilizeEffectTime = new HashMap<>();
-        this.lastExplosionEffectTime = new HashMap<>();
-        this.lastNauseaEffectTime = new HashMap<>();
+        this.lastKnockbackEffectTime = new HashMap<>(); //ノックバック
+        this.lastImmobilizeEffectTime = new HashMap<>(); //動けない
+        this.lastExplosionEffectTime = new HashMap<>(); //爆発
+        this.lastNauseaEffectTime = new HashMap<>(); //吐き気
 
     }
 
@@ -30,7 +30,8 @@ public class EffectManager {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        long cooldown = config.getInt("effects.knockback.cooldown", 300) * 1000; // ミリ秒に変換
+        long cooldown = config.getInt("effects.settings.knockback.cooldown", 300) * 1000; // ミリ秒に変換
+        int strength = config.getInt("effects.settings.knockbacks.strength",10);
 
         if (lastKnockbackEffectTime.containsKey(playerId) && currentTime - lastKnockbackEffectTime.get(playerId) < cooldown) {
             return;
@@ -48,7 +49,8 @@ public class EffectManager {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        long cooldown = config.getInt("effects.immobilize.cooldown", 1800) * 1000;
+        long cooldown = config.getInt("effects.settings.immobilize.cooldown", 1800) * 1000;
+        int duration = config.getInt("effects.settings.immobilize.duration", 2);
 
         if (lastImmobilizeEffectTime.containsKey(playerId) && currentTime - lastImmobilizeEffectTime.get(playerId) < cooldown) {
             return;
@@ -65,7 +67,7 @@ public class EffectManager {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        long cooldown = config.getInt("effects.explosion.cooldown", 600) * 1000;
+        long cooldown = config.getInt("effects.settings.explosion.cooldown", 600) * 1000;
 
         if (lastExplosionEffectTime.containsKey(playerId) && currentTime - lastExplosionEffectTime.get(playerId) < cooldown) {
             return;
@@ -81,7 +83,8 @@ public class EffectManager {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        long cooldown = config.getInt("effects.nausea.cooldown", 300) * 1000;
+        long cooldown = config.getInt("effects.settings.nausea.cooldown", 300) * 1000;
+        int strength = config.getInt("effects.settings.nausea.strength", 10);
 
         if (lastNauseaEffectTime.containsKey(playerId) && currentTime - lastNauseaEffectTime.get(playerId) < cooldown) {
             return;

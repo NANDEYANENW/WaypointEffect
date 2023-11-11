@@ -1,0 +1,19 @@
+effects:
+  enable:
+    knockback: true
+    immobilize: true
+    explosion: true
+    nausea: true
+  settings:
+    knockback:
+      cooldown: 300 # 5分（単位：秒）
+      strength: 10
+    immobilize:
+      cooldown: 1800 # 30分（単位：秒）
+      duration: 2 # 2秒間
+    explosion:
+      cooldown: 600 # 10分（単位：秒）
+    nausea:
+      cooldown: 300 # 5分（単位：秒）
+      duration: 2 # 2秒間
+      strength: 10
