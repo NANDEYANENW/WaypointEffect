@@ -10,7 +10,13 @@ commands:
   reload:
     description: 設定を再読み込みします。
     usage: /wp:reload
+  effecttoggle:
+    description: エフェクトを個別に設定します。
+    usage: /effecttoggle [effect] [on|off]
 permissions:
   wp.reload:
     description: 設定を再読み込みします。
+    default: op
+  wp.effecttoggle:
+    description: エフェクトを個別に設定します。
     default: op

@@ -11,22 +11,29 @@ import java.util.UUID;
 
 public class EffectManager {
 
+    private HashMap<String,Boolean> effectEnabled = new HashMap<>();
     private final WaypointEffect plugin;
     private HashMap<UUID,Long> lastKnockbackEffectTime;
     private HashMap<UUID,Long> lastImmobilizeEffectTime;
     private HashMap<UUID,Long> lastExplosionEffectTime;
     private HashMap<UUID,Long> lastNauseaEffectTime;
 
+
     public EffectManager(WaypointEffect plugin){
         this.plugin = plugin;
         this.lastKnockbackEffectTime = new HashMap<>(); //ノックバック
         this.lastImmobilizeEffectTime = new HashMap<>(); //動けない
         this.lastExplosionEffectTime = new HashMap<>(); //爆発
-        this.lastNauseaEffectTime = new HashMap<>(); //吐き気
+        this.lastNauseaEffectTime = new HashMap<>();
+        effectEnabled.put("knockback", true);
+        effectEnabled.put("immobilize", true);
+        effectEnabled.put("explosion", true);
+        effectEnabled.put("nausea", true);
 
     }
 
     public void activateKnockbackEffect(Player player) {
+
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
@@ -40,8 +47,9 @@ public class EffectManager {
         Vector direction = player.getLocation().getDirection();
         direction.setY(0).normalize().multiply(-10); // 効果のサイズ（強度）は10
         player.setVelocity(direction);
-
+        if (!isEffectEnabled("knockback")) return;
         lastKnockbackEffectTime.put(playerId, currentTime);
+
     }
 
 
@@ -57,7 +65,7 @@ public class EffectManager {
         }
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 255)); // 効果期間は2秒間
-
+        if (!isEffectEnabled("Immobilize")) return;
         lastImmobilizeEffectTime.put(playerId, currentTime);
     }
 
@@ -74,7 +82,7 @@ public class EffectManager {
         }
 
         player.getWorld().createExplosion(player.getLocation(), 0F, false); // 実際のダメージはなし
-
+        if (!isEffectEnabled("Explosion")) return;
         lastExplosionEffectTime.put(playerId, currentTime);
     }
 
@@ -91,8 +99,15 @@ public class EffectManager {
         }
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 10)); // 効果期間は2秒間
-
+        if (!isEffectEnabled("nausea")) return;
         lastNauseaEffectTime.put(playerId, currentTime);
+    }
+    public void setEffectEnabled(String effect, boolean enabled) {
+        effectEnabled.put(effect, enabled);
+    }
+
+    public boolean isEffectEnabled(String effect) {
+        return effectEnabled.getOrDefault(effect, false);
     }
 
 }

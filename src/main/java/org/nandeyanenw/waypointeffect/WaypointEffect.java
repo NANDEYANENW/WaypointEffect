@@ -6,9 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 public class WaypointEffect extends JavaPlugin implements CommandExecutor {
 
     private ConfigManager configManager;
+    private EffectManager effectManager;
+
 
     @Override
     public void onEnable() {
@@ -17,7 +20,10 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor {
         configManager = new ConfigManager(this);
         configManager.loadConfig();
 
+        effectManager = new EffectManager(this);
+
         this.getCommand("wp").setExecutor(this);
+        this.getCommand("effecttoggle").setExecutor(this);
 
     }
 
@@ -27,22 +33,36 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor {
             sender.sendMessage("§cこのコマンドはプレイヤーからのみ実行できます。");
             return true;
         }
+
         Player player = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("wp") && args.length > 0) {
-            if (args[0].equalsIgnoreCase("reload")){
+
+        if (cmd.getName().equalsIgnoreCase("wp")) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                if (!player.hasPermission("wp.reload")) {
+                    player.sendMessage("§cあなたにはこのコマンドを実行する権限がありません。");
+                    return true;
+                }
                 configManager.loadConfig();
                 sender.sendMessage("設定を再読み込みしました。");
                 return true;
             }
+        } else if (cmd.getName().equalsIgnoreCase("effecttoggle")) {
+            if (args.length == 2) {
+                if (!player.hasPermission("wp.effecttoggle")) {
+                    player.sendMessage("§cあなたにはこのコマンドを実行する権限がありません。");
+                    return true;
+                }
+                String effect = args[0];
+                boolean enabled = args[1].equalsIgnoreCase("enable");
+                effectManager.setEffectEnabled(effect, enabled);
+                sender.sendMessage(effect + " エフェクトを " + (enabled ? "enabled" : "disabled"));
+                return true;
+            } else {
+                sender.sendMessage("使用法: /effecttoggle [effect] [enable|disable]");
+            }
         }
 
-        if (!player.hasPermission("wp.reload")){
-            player.sendMessage("§cあなたにはこのコマンドを実行する権限がありません。");
-            return true;
-
-        }
         return false;
-
     }
 
     @Override
