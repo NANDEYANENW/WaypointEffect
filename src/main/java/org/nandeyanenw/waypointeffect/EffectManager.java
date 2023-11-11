@@ -17,8 +17,6 @@ public class EffectManager {
         int cooldown = config.getInt("effects.knockback.cooldown",300);
         int strength = config.getInt("effects.knockback.strength",10);
 
-
-
     }
 
     public void activateImmobilizeEffect(Player player) {
@@ -29,7 +27,12 @@ public class EffectManager {
 
     public void activeExplosionEffect(Player player) {
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.explosion.cooldown",300);
-
+        int cooldown = config.getInt("effects.explosion.cooldown", 300);
     }
-}
+
+    public void activeNauseaEffect(Player player) {
+        FileConfiguration config = plugin.getConfig();
+        int cooldown = config.getInt("effects.nausea.cooldown",300);
+        }
+ }
+

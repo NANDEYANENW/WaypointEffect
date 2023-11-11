@@ -7,3 +7,6 @@ effects:
     duration: 2
   explosion:
     cooldown: 600
+  nausea:
+    cooldown: 600
+
