@@ -48,19 +48,20 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor {
             }
         } else if (cmd.getName().equalsIgnoreCase("effecttoggle")) {
             if (args.length == 2) {
-                if (!player.hasPermission("wp.effecttoggle")) {
-                    player.sendMessage("§cあなたにはこのコマンドを実行する権限がありません。");
+                if (!sender.hasPermission("wp.effecttoggle")) {
+                    sender.sendMessage("§cあなたにはこのコマンドを実行する権限がありません。");
                     return true;
                 }
                 String effect = args[0];
                 boolean enabled = args[1].equalsIgnoreCase("enable");
-                effectManager.setEffectEnabled(effect, enabled);
-                sender.sendMessage(effect + " エフェクトを " + (enabled ? "enabled" : "disabled"));
+                configManager.setEffectEnabled(effect, enabled);
+                sender.sendMessage(effect + " エフェクトを " + (enabled ? "有効化" : "無効化") + "しました。");
                 return true;
             } else {
                 sender.sendMessage("使用法: /effecttoggle [effect] [enable|disable]");
             }
         }
+
 
         return false;
     }
