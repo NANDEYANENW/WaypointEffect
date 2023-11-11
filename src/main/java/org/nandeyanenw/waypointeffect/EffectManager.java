@@ -27,69 +27,70 @@ public class EffectManager {
     }
 
     public void activateKnockbackEffect(Player player) {
-        long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.knockback.cooldown",300) * 1000;
-        int strength = config.getInt("effects.knockback.strength",10);
+        long cooldown = config.getInt("effects.knockback.cooldown", 300) * 1000; // ミリ秒に変換
 
-        if (lastKnockbackEffectTime.containsKey(playerId) && currentTime -lastKnockbackEffectTime.get(playerId) <cooldown) {
+        if (lastKnockbackEffectTime.containsKey(playerId) && currentTime - lastKnockbackEffectTime.get(playerId) < cooldown) {
             return;
         }
+
         Vector direction = player.getLocation().getDirection();
-        direction.setY(0).normalize().multiply(-strength);
+        direction.setY(0).normalize().multiply(-10); // 効果のサイズ（強度）は10
         player.setVelocity(direction);
 
-        lastKnockbackEffectTime.put(playerId,currentTime);
-
+        lastKnockbackEffectTime.put(playerId, currentTime);
     }
 
+
     public void activateImmobilizeEffect(Player player) {
-        long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.immobilize.cooldown",1800) * 1000;
-        int strength = config.getInt("effects.immobilize.strength",2);
-        int duration = config.getInt("effects.immobilize.duration",2) * 20;
+        long cooldown = config.getInt("effects.immobilize.cooldown", 1800) * 1000;
 
         if (lastImmobilizeEffectTime.containsKey(playerId) && currentTime - lastImmobilizeEffectTime.get(playerId) < cooldown) {
             return;
         }
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,duration,255));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 255)); // 効果期間は2秒間
 
-        lastImmobilizeEffectTime.put(playerId,currentTime);
+        lastImmobilizeEffectTime.put(playerId, currentTime);
     }
 
 
+
     public void activateExplosionEffect(Player player) {
-        long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.explosion.cooldown", 300) * 1000;
-        player.getWorld().createExplosion(player.getLocation(),0F);
+        long cooldown = config.getInt("effects.explosion.cooldown", 600) * 1000;
 
         if (lastExplosionEffectTime.containsKey(playerId) && currentTime - lastExplosionEffectTime.get(playerId) < cooldown) {
             return;
         }
 
-        lastExplosionEffectTime.put(playerId,currentTime);
+        player.getWorld().createExplosion(player.getLocation(), 0F, false); // 実際のダメージはなし
+
+        lastExplosionEffectTime.put(playerId, currentTime);
     }
 
+
     public void activateNauseaEffect(Player player) {
-        long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.nausea.cooldown",300) * 1000;
-        int duration = 10 * 20;
+        long cooldown = config.getInt("effects.nausea.cooldown", 300) * 1000;
+
         if (lastNauseaEffectTime.containsKey(playerId) && currentTime - lastNauseaEffectTime.get(playerId) < cooldown) {
             return;
         }
-        player.addPotionEffect((new PotionEffect(PotionEffectType.CONFUSION,duration,5)));
 
-        lastNauseaEffectTime.put(playerId,currentTime);
-        }
+        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 10)); // 効果期間は2秒間
 
+        lastNauseaEffectTime.put(playerId, currentTime);
+    }
 
 }
 
