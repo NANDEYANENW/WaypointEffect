@@ -7,12 +7,12 @@ authors:
   - © なんでやねんｗ 2023
 
 commands:
-  reload:
-    description: 設定を再読み込みします。
-    usage: /wp:reload
+  wp:
+    description: プラグイン関連のコマンドを実行します。
+    usage: /wp reload
   effecttoggle:
     description: エフェクトを個別に設定します。
-    usage: /effecttoggle [effect] [on|off]
+    usage: /effecttoggle [effect] [enable|disable]
 permissions:
   wp.reload:
     description: 設定を再読み込みします。
