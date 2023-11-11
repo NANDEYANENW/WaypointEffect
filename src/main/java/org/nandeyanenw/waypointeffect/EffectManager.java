@@ -30,7 +30,7 @@ public class EffectManager {
         long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.knockback.cooldown",300);
+        int cooldown = config.getInt("effects.knockback.cooldown",300) * 1000;
         int strength = config.getInt("effects.knockback.strength",10);
 
         if (lastKnockbackEffectTime.containsKey(playerId) && currentTime -lastKnockbackEffectTime.get(playerId) <cooldown) {
@@ -48,41 +48,49 @@ public class EffectManager {
         long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.immobilize.cooldown",1800);
+        int cooldown = config.getInt("effects.immobilize.cooldown",1800) * 1000;
         int strength = config.getInt("effects.immobilize.strength",2);
         int duration = config.getInt("effects.immobilize.duration",2) * 20;
-
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,duration,255));
 
         if (lastImmobilizeEffectTime.containsKey(playerId) && currentTime - lastImmobilizeEffectTime.get(playerId) < cooldown) {
             return;
         }
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,duration,255));
+
+        lastImmobilizeEffectTime.put(playerId,currentTime);
     }
 
-    public void activeExplosionEffect(Player player) {
+
+    public void activateExplosionEffect(Player player) {
         long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.explosion.cooldown", 300);
+        int cooldown = config.getInt("effects.explosion.cooldown", 300) * 1000;
         player.getWorld().createExplosion(player.getLocation(),0F);
 
         if (lastExplosionEffectTime.containsKey(playerId) && currentTime - lastExplosionEffectTime.get(playerId) < cooldown) {
             return;
         }
+
+        lastExplosionEffectTime.put(playerId,currentTime);
     }
 
-    public void activeNauseaEffect(Player player) {
+    public void activateNauseaEffect(Player player) {
         long currentTime = System.currentTimeMillis();
         UUID playerId = player.getUniqueId();
         FileConfiguration config = plugin.getConfig();
-        int cooldown = config.getInt("effects.nausea.cooldown",300);
+        int cooldown = config.getInt("effects.nausea.cooldown",300) * 1000;
         int duration = 10 * 20;
-
-        player.addPotionEffect((new PotionEffect(PotionEffectType.CONFUSION,duration,5)));
         if (lastNauseaEffectTime.containsKey(playerId) && currentTime - lastNauseaEffectTime.get(playerId) < cooldown) {
             return;
         }
+        player.addPotionEffect((new PotionEffect(PotionEffectType.CONFUSION,duration,5)));
 
-    }
- }
+        lastNauseaEffectTime.put(playerId,currentTime);
+        }
+
+
+}
+
 
