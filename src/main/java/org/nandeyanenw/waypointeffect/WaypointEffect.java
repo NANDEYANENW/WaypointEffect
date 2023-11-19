@@ -1,5 +1,6 @@
 package org.nandeyanenw.waypointeffect;
 
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -7,11 +8,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class WaypointEffect extends JavaPlugin implements CommandExecutor {
+public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listener {
+
+    private Location goalMinLocation;
+    private Location goalMaxLocation;
 
     private ConfigManager configManager;
     private EffectManager effectManager;
@@ -20,6 +25,7 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        getLogger().info("撮影プラグインを起動しました。初期設定を行います。");
         saveDefaultConfig();
         configManager = new ConfigManager(this);
         configManager.loadConfig();
@@ -30,6 +36,10 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor {
         this.getCommand("effecttoggle").setExecutor(this);
         this.getCommand("forceeffect").setExecutor(this);
 
+        // ゴールエリアの座標範囲を設定
+        goalMinLocation = new Location(getServer().getWorld("world"), -10, 20, 999);
+        goalMaxLocation = new Location(getServer().getWorld("world"), 10, 20, 1001);
+        getServer().getPluginManager().registerEvents(this, this); // イベントリスナーとして登録
     }
 
     @Override
@@ -121,13 +131,15 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor {
     }
 
     private boolean isPlayerInsideGoal(Location location) {
-
-        return false;
+        return location.getX() >= goalMinLocation.getX() && location.getX() <= goalMaxLocation.getX()
+                && location.getY() >= goalMinLocation.getY() && location.getY() <= goalMaxLocation.getY()
+                && location.getZ() >= goalMinLocation.getZ() && location.getZ() <= goalMaxLocation.getZ();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        getLogger().info("撮影プラグインを終了しました。設定を保存します。");
         saveConfig();
     }
 

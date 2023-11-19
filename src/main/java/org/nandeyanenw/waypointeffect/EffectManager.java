@@ -10,17 +10,34 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class EffectManager {
+    private final WaypointEffect plugin;
+    private FileConfiguration config; // configの追加
 
     private HashMap<String,Boolean> effectEnabled = new HashMap<>();
-    private final WaypointEffect plugin;
     private HashMap<UUID,Long> lastKnockbackEffectTime;
     private HashMap<UUID,Long> lastImmobilizeEffectTime;
     private HashMap<UUID,Long> lastExplosionEffectTime;
     private HashMap<UUID,Long> lastNauseaEffectTime;
 
 
+    public void activateKnockbackEffect(Player player) {
+        if (this.isEffectEnabled("knockback")) {
+            UUID playerId = player.getUniqueId();
+            long currentTime = System.currentTimeMillis();
+            long cooldown = this.getCooldown("knockback", 300);
+            int strength = this.config.getInt("effects.settings.knockback.strength", 10);
+            if (currentTime - (Long)this.lastKnockbackEffectTime.getOrDefault(playerId, 0L) >= cooldown) {
+                Vector direction = player.getLocation().getDirection().multiply(-strength);
+                direction.setY(0);
+                player.setVelocity(direction);
+                this.lastKnockbackEffectTime.put(playerId, currentTime);
+            }
+        }
+    }
+
     public EffectManager(WaypointEffect plugin){
         this.plugin = plugin;
+        this.config = plugin.getConfig(); // configを初期化
         this.lastKnockbackEffectTime = new HashMap<>(); //ノックバック
         this.lastImmobilizeEffectTime = new HashMap<>(); //動けない
         this.lastExplosionEffectTime = new HashMap<>(); //爆発
@@ -29,30 +46,28 @@ public class EffectManager {
         effectEnabled.put("immobilize", true);
         effectEnabled.put("explosion", true);
         effectEnabled.put("nausea", true);
-
     }
 
-    public void activateKnockbackEffect(Player player) {
-        if (!isEffectEnabled("knockback")) return;
-
-
-        UUID playerId = player.getUniqueId();
-        long currentTime = System.currentTimeMillis();
-        FileConfiguration config = plugin.getConfig();
-        long cooldown = config.getInt("effects.settings.knockback.cooldown", 300) * 1000; // ミリ秒に変換
-        int strength = config.getInt("effects.settings.knockbacks.strength",10);
-
-        if (lastKnockbackEffectTime.containsKey(playerId) && currentTime - lastKnockbackEffectTime.get(playerId) < cooldown) {
-            return;
+    public void forceActivateEffect(Player player, String effect) {
+        switch (effect.toLowerCase()) {
+            case "knockback":
+                activateKnockbackEffect(player);
+                break;
+            case "immobilize":
+                activateImmobilizeEffect(player);
+                break;
+            case "explosion":
+                activateExplosionEffect(player);
+                break;
+            case "nausea":
+                activateNauseaEffect(player);
+                break;
+            default:
+                // 不明なエフェクトの場合は何もしない
         }
-
-        Vector direction = player.getLocation().getDirection();
-        direction.setY(0).normalize().multiply(-10); // 効果のサイズ（強度）は10
-        player.setVelocity(direction);
-        if (!isEffectEnabled("knockback")) return;
-        lastKnockbackEffectTime.put(playerId, currentTime);
-
     }
+
+
 
 
     public void activateImmobilizeEffect(Player player) {
@@ -93,39 +108,23 @@ public class EffectManager {
 
     public void activateNauseaEffect(Player player) {
         if (!isEffectEnabled("nausea")) return;
+
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
-        FileConfiguration config = plugin.getConfig();
-        long cooldown = config.getInt("effects.settings.nausea.cooldown", 300) * 1000;
-        int strength = config.getInt("effects.settings.nausea.strength", 10);
+        long cooldown = getCooldown("nausea", 300); // クールダウン時間の取得
+        int duration = config.getInt("effects.settings.nausea.duration", 10); // 効果期間の設定
 
-        if (lastNauseaEffectTime.containsKey(playerId) && currentTime - lastNauseaEffectTime.get(playerId) < cooldown) {
-            return;
-        }
+        if (currentTime - lastNauseaEffectTime.getOrDefault(playerId, 0L) < cooldown) return;
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 10)); // 効果期間は2秒間
-        if (!isEffectEnabled("nausea")) return;
+        // 吐き気エフェクトの発動（強度は固定値で設定）
+        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration * 20, 1)); // 期間をティック単位に変換
+
         lastNauseaEffectTime.put(playerId, currentTime);
     }
 
-    public void forceActivateEffect(Player player, String effect) {
-        switch (effect) {
-            case "knockback":
-                // 強制的にノックバックエフェクトを発動
-                break;
-            case "immobilize":
-                // 強制的に動けなくなるエフェクトを発動
-                break;
-            case "explosion":
-                // 強制的に爆発エフェクトを発動
-                break;
-            case "nausea":
-                // 強制的に吐き気エフェクトを発動
-                break;
-            default:
-                // 何もしない
-        }
-    }
+    private long getCooldown(String effectName, int defaultCooldown) {
+        return plugin.getConfig().getInt("effects.settings." + effectName + ".cooldown", defaultCooldown) * 1000L;
+   }
     public void setEffectEnabled(String effect, boolean enabled) {
         effectEnabled.put(effect, enabled);
     }
