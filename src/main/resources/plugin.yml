@@ -13,10 +13,16 @@ commands:
   effecttoggle:
     description: エフェクトを個別に設定します。
     usage: /effecttoggle [effect] [enable|disable]
+  forceeffect:
+    description:
+    usage: /forceeffect [effect] [player]
 permissions:
   wp.reload:
     description: 設定を再読み込みします。
     default: op
   wp.effecttoggle:
     description: エフェクトを個別に設定します。
+    default: op
+  wp.fe:
+    description: エフェクトを強制的に発動させます。
     default: op

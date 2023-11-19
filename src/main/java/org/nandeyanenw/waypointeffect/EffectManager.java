@@ -33,6 +33,8 @@ public class EffectManager {
     }
 
     public void activateKnockbackEffect(Player player) {
+        if (!isEffectEnabled("knockback")) return;
+
 
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
@@ -54,6 +56,7 @@ public class EffectManager {
 
 
     public void activateImmobilizeEffect(Player player) {
+        if (!isEffectEnabled("immobilize")) return;
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
@@ -72,6 +75,7 @@ public class EffectManager {
 
 
     public void activateExplosionEffect(Player player) {
+        if (!isEffectEnabled("explosion")) return;
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
@@ -88,6 +92,7 @@ public class EffectManager {
 
 
     public void activateNauseaEffect(Player player) {
+        if (!isEffectEnabled("nausea")) return;
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
         FileConfiguration config = plugin.getConfig();
@@ -101,6 +106,25 @@ public class EffectManager {
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 10)); // 効果期間は2秒間
         if (!isEffectEnabled("nausea")) return;
         lastNauseaEffectTime.put(playerId, currentTime);
+    }
+
+    public void forceActivateEffect(Player player, String effect) {
+        switch (effect) {
+            case "knockback":
+                // 強制的にノックバックエフェクトを発動
+                break;
+            case "immobilize":
+                // 強制的に動けなくなるエフェクトを発動
+                break;
+            case "explosion":
+                // 強制的に爆発エフェクトを発動
+                break;
+            case "nausea":
+                // 強制的に吐き気エフェクトを発動
+                break;
+            default:
+                // 何もしない
+        }
     }
     public void setEffectEnabled(String effect, boolean enabled) {
         effectEnabled.put(effect, enabled);

@@ -11,20 +11,47 @@ import java.util.UUID;
 import java.util.HashMap;
 
 public class AthleticEffectsHandler {
-
+    private final EffectManager effectManager;
+    private final WaypointEffect plugin;
     private HashMap<UUID, Long> playerStartTimes;
-    private EffectManager effectManager;
 
-    public AthleticEffectsHandler(EffectManager effectManager) {
+    public AthleticEffectsHandler(EffectManager effectManager, WaypointEffect plugin) {
         this.effectManager = effectManager;
+        this.plugin = plugin;
         this.playerStartTimes = new HashMap<>();
-
     }
+
 
     public void startAthletic(Player player) {
-        playerStartTimes.put(player.getUniqueId(), System.currentTimeMillis());
         // アスレチックのスタート処理
+        playerStartTimes.put(player.getUniqueId(), System.currentTimeMillis());
+
+        // 特定の条件に基づいてエフェクトを発動する
+        if (effectManager.isEffectEnabled("knockback")) {
+            effectManager.activateKnockbackEffect(player);
+        }
+        if (effectManager.isEffectEnabled("immobilize")) {
+            effectManager.activateImmobilizeEffect(player);
+        }
+        if (effectManager.isEffectEnabled("explosion")) {
+            effectManager.activateExplosionEffect(player);
+        }
+        if (effectManager.isEffectEnabled("nausea")) {
+            effectManager.activateNauseaEffect(player);
+        }
     }
+
+        // プレイヤーがアスレチックを開始してからの時間を取得
+    public long getElapsedTime(Player player) {
+        return System.currentTimeMillis() - playerStartTimes.getOrDefault(player.getUniqueId(), 0L);
+    }
+
+    // アスレチックを開始したかどうかをチェック
+    public boolean hasStartedAthletic(Player player) {
+        return playerStartTimes.containsKey(player.getUniqueId());
+    }
+
+
 
     public void checkAndActivateEffects(Player player) {
         if (!playerStartTimes.containsKey(player.getUniqueId())) return;
