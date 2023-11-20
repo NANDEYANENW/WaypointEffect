@@ -31,7 +31,7 @@ public class EffectManager {
                 Vector direction = player.getLocation().getDirection().multiply(-strength);
                 direction.setY(0);
                 player.setVelocity(direction);
-                lastKnockbackEffectTime.put(playerId, currentTime);
+                this.lastKnockbackEffectTime.put(playerId, currentTime);
     }
 
 
@@ -82,7 +82,7 @@ public class EffectManager {
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 255)); // 効果期間は2秒間
         if (!isEffectEnabled("Immobilize")) return;
-        lastImmobilizeEffectTime.put(playerId, currentTime);
+        this.lastImmobilizeEffectTime.put(playerId, currentTime);
     }
 
 
@@ -100,7 +100,7 @@ public class EffectManager {
 
         player.getWorld().createExplosion(player.getLocation(), 0F, false); // 実際のダメージはなし
         if (!isEffectEnabled("Explosion")) return;
-        lastExplosionEffectTime.put(playerId, currentTime);
+        this.lastExplosionEffectTime.put(playerId, currentTime);
     }
 
 
@@ -117,7 +117,7 @@ public class EffectManager {
         // 吐き気エフェクトの発動（強度は固定値で設定）
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration * 40, 10)); // 期間をティック単位に変換
 
-        lastNauseaEffectTime.put(playerId, currentTime);
+        this.lastNauseaEffectTime.put(playerId, currentTime);
     }
 
     private long getCooldown(String effectName, int defaultCooldown) {
@@ -128,7 +128,7 @@ public class EffectManager {
     }
 
     public boolean isEffectEnabled(String effect) {
-        return effectEnabled.getOrDefault(effect, false);
+        return effectEnabled.getOrDefault(effect, false); //設定されていないエフェクトはデフォルトで無効になります。
     }
 
 }
