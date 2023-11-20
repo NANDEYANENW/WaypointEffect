@@ -21,19 +21,19 @@ public class EffectManager {
 
 
     public void activateKnockbackEffect(Player player) {
-        if (this.isEffectEnabled("knockback")) {
+        if (this.isEffectEnabled("knockback")) return;
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis();
             long cooldown = this.getCooldown("knockback", 300);
             int strength = this.config.getInt("effects.settings.knockback.strength", 10);
-            if (currentTime - (Long)this.lastKnockbackEffectTime.getOrDefault(playerId, 0L) >= cooldown) {
+
+            if (currentTime - (Long)this.lastKnockbackEffectTime.getOrDefault(playerId, 0L) >= cooldown) return;
                 Vector direction = player.getLocation().getDirection().multiply(-strength);
                 direction.setY(0);
                 player.setVelocity(direction);
-                this.lastKnockbackEffectTime.put(playerId, currentTime);
-            }
-        }
+                lastKnockbackEffectTime.put(playerId, currentTime);
     }
+
 
     public EffectManager(WaypointEffect plugin){
         this.plugin = plugin;
@@ -41,7 +41,7 @@ public class EffectManager {
         this.lastKnockbackEffectTime = new HashMap<>(); //ノックバック
         this.lastImmobilizeEffectTime = new HashMap<>(); //動けない
         this.lastExplosionEffectTime = new HashMap<>(); //爆発
-        this.lastNauseaEffectTime = new HashMap<>();
+        this.lastNauseaEffectTime = new HashMap<>(); //吐き気
         effectEnabled.put("knockback", true);
         effectEnabled.put("immobilize", true);
         effectEnabled.put("explosion", true);
@@ -66,8 +66,6 @@ public class EffectManager {
                 // 不明なエフェクトの場合は何もしない
         }
     }
-
-
 
 
     public void activateImmobilizeEffect(Player player) {
@@ -117,7 +115,7 @@ public class EffectManager {
         if (currentTime - lastNauseaEffectTime.getOrDefault(playerId, 0L) < cooldown) return;
 
         // 吐き気エフェクトの発動（強度は固定値で設定）
-        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration * 20, 1)); // 期間をティック単位に変換
+        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration * 40, 10)); // 期間をティック単位に変換
 
         lastNauseaEffectTime.put(playerId, currentTime);
     }
