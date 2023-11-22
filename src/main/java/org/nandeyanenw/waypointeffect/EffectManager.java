@@ -102,7 +102,7 @@ public class EffectManager {
         if (currentTime - this.lastImmobilizeEffectTime.getOrDefault(playerId, 0L) < cooldown) return;
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 255)); // 効果期間は2秒間
-        if (!isEffectEnabled("")) return;
+        if (!isEffectEnabled("Immobilize")) return;
         this.lastImmobilizeEffectTime.put(playerId, currentTime);
         long endTime = currentTime + cooldown;
         this.showCooldownInActionBar(player, "動けない", endTime);
