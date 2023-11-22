@@ -6,7 +6,7 @@
 
     <groupId>org.nandeyanenw</groupId>
     <artifactId>WaypointEffect</artifactId>
-    <version>1.1beta</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>WaypointEffect</name>

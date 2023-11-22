@@ -91,7 +91,7 @@ public class AthleticEffectsHandler {
 
         // ゴール地点の範囲を定義する
         Location goalMinLocation = new Location(player.getWorld(), 10, 20, 999); // 範囲の最小座標
-        Location goalMaxLocation = new Location(player.getWorld(), -10, 20,1001); // 範囲の最大座標
+        Location goalMaxLocation = new Location(player.getWorld(), -10, 20,1013); // 範囲の最大座標
 
         // プレイヤーの位置がゴール地点の範囲内にあるかをチェック
         return isLocationInside(playerLocation, goalMinLocation, goalMaxLocation);

@@ -15,6 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listener {
 
+    private StartPointListener startPointListener;
+
+
     private Location goalMinLocation;
     private Location goalMaxLocation;
 
@@ -35,11 +38,14 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
         this.getCommand("wp").setExecutor(this);
         this.getCommand("effecttoggle").setExecutor(this);
         this.getCommand("forceeffect").setExecutor(this);
-
+        startPointListener = new StartPointListener();
         // ゴールエリアの座標範囲を設定
         goalMinLocation = new Location(getServer().getWorld("world"), -10, 20, 999);
-        goalMaxLocation = new Location(getServer().getWorld("world"), 10, 20, 1001);
-        getServer().getPluginManager().registerEvents(this, this); // イベントリスナーとして登録
+        goalMaxLocation = new Location(getServer().getWorld("world"), 10, 20, 1013);
+        getServer().getPluginManager().registerEvents(startPointListener, this); // イベントリスナーとして登録
+    }
+    public StartPointListener getStartPointListener() {
+        return startPointListener;
     }
 
     @Override
@@ -125,7 +131,7 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
 
         if (isPlayerInsideGoal(playerLocation) && player.getGameMode() == GameMode.ADVENTURE) {
 
-            player.setGameMode(GameMode.ADVENTURE);
+            player.setGameMode(GameMode.SPECTATOR);
 
         }
     }
