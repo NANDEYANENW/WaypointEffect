@@ -42,7 +42,7 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
         // ゴールエリアの座標範囲を設定
         goalMinLocation = new Location(getServer().getWorld("world"), -10, 20, 999);
         goalMaxLocation = new Location(getServer().getWorld("world"), 10, 20, 1013);
-        getServer().getPluginManager().registerEvents(startPointListener, this); // イベントリスナーとして登録
+        getServer().getPluginManager().registerEvents(new StartPointListener(),this);
     }
     public StartPointListener getStartPointListener() {
         return startPointListener;
@@ -118,16 +118,16 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
     private void applyEffectToPlayer(Player player, String effect) {
         switch (effect) {
             case "knockback":
-                effectManager.activateKnockbackEffect(player);
+                effectManager.activateKnockbackEffect(player,false);
                 break;
             case "immobilize":
-                effectManager.activateImmobilizeEffect(player);
+                effectManager.activateImmobilizeEffect(player,false);
                 break;
             case "explosion":
-                effectManager.activateExplosionEffect(player);
+                effectManager.activateExplosionEffect(player,false);
                 break;
             case "nausea":
-                effectManager.activateNauseaEffect(player);
+                effectManager.activateNauseaEffect(player,false);
                 break;
             default:
                 break;
