@@ -182,6 +182,6 @@ public class EffectManager {
                         break;
                 }
             }
-        }.runTaskTimer(plugin, 0,cooldown / 50);
+        }.runTaskTimer(plugin, 0L,cooldown / 50);
     }
 }
