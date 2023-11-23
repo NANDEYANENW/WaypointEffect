@@ -78,6 +78,18 @@ public class EffectManager {
         long endTime = currentTime + cooldown;
         this.showCooldownInActionBar(player, "ノックバック", endTime);
         // クールダウン終了後にエフェクトを再発動するタスクをスケジュール
+        long announceTime = cooldown - 5000; // 5秒前
+        if (announceTime > 0) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        player.sendMessage(ChatColor.YELLOW + "[!] ノックバックまであと5秒です。");
+                    }
+                }
+            }.runTaskLater(this.plugin, announceTime / 50);
+        }
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -106,6 +118,17 @@ public class EffectManager {
         this.lastImmobilizeEffectTime.put(playerId, currentTime);
         long endTime = currentTime + cooldown;
         this.showCooldownInActionBar(player, "動けない", endTime);
+        long announceTime = cooldown - 5000; // 5秒前
+        if (announceTime > 0) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        player.sendMessage(ChatColor.YELLOW + "[!] 動けなくなるまであと5秒です。");
+                    }
+                }
+            }.runTaskLater(this.plugin, announceTime / 50);
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -133,6 +156,17 @@ public class EffectManager {
         this.lastExplosionEffectTime.put(playerId, currentTime);
         long endTime = currentTime + cooldown;
         this.showCooldownInActionBar(player, "爆破", endTime);
+        long announceTime = cooldown - 5000; // 5秒前
+        if (announceTime > 0) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        player.sendMessage(ChatColor.YELLOW + "[!] 爆破まであと5秒です。");
+                    }
+                }
+            }.runTaskLater(this.plugin, announceTime / 50);
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -165,6 +199,17 @@ public class EffectManager {
         this.lastNauseaEffectTime.put(playerId, currentTime);
         long endTime = currentTime + cooldown;
         this.showCooldownInActionBar(player, "吐き気", endTime);
+        long announceTime = cooldown - 5000; // 5秒前
+        if (announceTime > 0) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        player.sendMessage(ChatColor.YELLOW + "[!] 吐き気まであと5秒です。");
+                    }
+                }
+            }.runTaskLater(this.plugin, announceTime / 50);
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
