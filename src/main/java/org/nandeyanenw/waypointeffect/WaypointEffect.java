@@ -90,38 +90,50 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
                     return true;
                 }
 
-                Player targetPlayer = this.getServer().getPlayer(args[1]);
-                if (targetPlayer == null) {
-                    sender.sendMessage("§c指定したプレイヤーが見つかりません。");
-                    return true;
-                }
-
-                switch (args[0].toLowerCase()) {
-                    case "knockback":
-                        effectManager.activateKnockbackEffect(targetPlayer);
-                        break;
-                    case "immobilize":
-                        effectManager.activateImmobilizeEffect(targetPlayer);
-                        break;
-                    case "explosion":
-                        effectManager.activateExplosionEffect(targetPlayer);
-                        break;
-                    case "nausea":
-                        effectManager.activateNauseaEffect(targetPlayer);
-                        break;
-                    default:
-                        sender.sendMessage("§c無効なエフェクト名です。");
+                String effect = args[0].toLowerCase();
+                if (args[1].equalsIgnoreCase("all")) {
+                    // 全プレイヤーにエフェクトを適用
+                    for (Player targetPlayer : this.getServer().getOnlinePlayers()){
+                        applyEffectToPlayer(targetPlayer, effect);
+                    }
+                    sender.sendMessage("§e全プレイヤーに " + effect + " エフェクトを適用しました。");
+                } else {
+                    // 特定のプレイヤーにエフェクトを適用
+                    Player targetPlayer = this.getServer().getPlayer(args[1]);
+                    if (targetPlayer == null) {
+                        sender.sendMessage("§c指定したプレイヤーが見つかりません。");
                         return true;
+                    }
+                    applyEffectToPlayer(targetPlayer, effect);
+                    sender.sendMessage("§e" + targetPlayer.getName() + " に " + effect + " エフェクトを適用しました。");
                 }
-
-                sender.sendMessage("§e" + targetPlayer.getName() + " に " + args[0] + " エフェクトを適用しました。");
                 return true;
             } else {
-                sender.sendMessage("使用法: /forceeffect [effect] [player]");
+                sender.sendMessage("使用法: /forceeffect [effect] [player|all]");
             }
         }
-       return true;
+        return false;
     }
+
+    private void applyEffectToPlayer(Player player, String effect) {
+        switch (effect) {
+            case "knockback":
+                effectManager.activateKnockbackEffect(player);
+                break;
+            case "immobilize":
+                effectManager.activateImmobilizeEffect(player);
+                break;
+            case "explosion":
+                effectManager.activateExplosionEffect(player);
+                break;
+            case "nausea":
+                effectManager.activateNauseaEffect(player);
+                break;
+            default:
+                break;
+        }
+    }
+
 
 
     @EventHandler

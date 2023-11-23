@@ -120,8 +120,6 @@ public class EffectManager {
     }
 
 
-
-
     public void activateExplosionEffect(Player player) {
         if (!isEffectEnabled("explosion")) return;
         UUID playerId = player.getUniqueId();
