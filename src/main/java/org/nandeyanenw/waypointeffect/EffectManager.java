@@ -96,12 +96,12 @@ public class EffectManager {
         long cooldown = this.getCooldown("immobilize", 1800);
         int duration = this.config.getInt("effects.settings.immobilize.duration", 2);
 
-        if (!isForced && (currentTime - this.lastImmobilizeEffectTime.getOrDefault(playerId, 20L) < cooldown)) {
+        if (!isForced && (currentTime - this.lastImmobilizeEffectTime.getOrDefault(playerId, 0L) < cooldown)) {
             return;
         }
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40 * duration, 255));
-        this.lastEffectTime.put(playerId, currentTime);
+        this.lastImmobilizeEffectTime.put(playerId, currentTime);
 
 
         long announceTime = currentTime + cooldown - 5000; // 5秒前のタイミング
@@ -130,7 +130,7 @@ public class EffectManager {
         }
 
         player.getWorld().createExplosion(player.getLocation(), 0F, false);
-        this.lastEffectTime.put(playerId, currentTime);
+        this.lastExplosionEffectTime.put(playerId, currentTime);
         long announceTime = currentTime + cooldown - 5000; // 5秒前のタイミング
 
         new BukkitRunnable() {
