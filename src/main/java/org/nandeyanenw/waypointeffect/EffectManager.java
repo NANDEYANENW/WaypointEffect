@@ -74,9 +74,20 @@ public class EffectManager {
         player.setVelocity(direction);
         lastKnockbackEffectTime.put(playerId, currentTime);
 
-        // 次の発動をスケジュール
+        long announceTime = currentTime + cooldown - 5000; // 5秒前のタイミング
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.isOnline()) {
+                    player.sendMessage(ChatColor.YELLOW + "[!] ノックバックまであと5秒です。");
+                }
+            }
+        }.runTaskLater(plugin, (announceTime - System.currentTimeMillis()) / 50);
+
         scheduleNextEffectActivation(player, "knockback", cooldown);
     }
+
 
 
     public void activateImmobilizeEffect(Player player, boolean isForced) {
@@ -90,10 +101,21 @@ public class EffectManager {
         }
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40 * duration, 255));
-        this.lastImmobilizeEffectTime.put(playerId, currentTime);
+        this.lastEffectTime.put(playerId, currentTime);
 
 
-        scheduleNextEffectActivation(player, "immobilize", cooldown);
+        long announceTime = currentTime + cooldown - 5000; // 5秒前のタイミング
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.isOnline()) {
+                    player.sendMessage(ChatColor.YELLOW + "[!] 動けなくなるまであと5秒です。");
+                }
+            }
+        }.runTaskLater(plugin, (announceTime - System.currentTimeMillis()) / 50);
+
+        scheduleNextEffectActivation(player, "Immobilize", cooldown);
 
     }
 
@@ -108,10 +130,19 @@ public class EffectManager {
         }
 
         player.getWorld().createExplosion(player.getLocation(), 0F, false);
-        this.lastExplosionEffectTime.put(playerId, currentTime);
+        this.lastEffectTime.put(playerId, currentTime);
+        long announceTime = currentTime + cooldown - 5000; // 5秒前のタイミング
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.isOnline()) {
+                    player.sendMessage(ChatColor.YELLOW + "[!] 爆発まであと5秒です。");
+                }
+            }
+        }.runTaskLater(plugin, (announceTime - System.currentTimeMillis()) / 50);
 
-        scheduleNextEffectActivation(player, "explosion", cooldown);
+        scheduleNextEffectActivation(player, "Explosion", cooldown);
 
     }
 
@@ -128,6 +159,16 @@ public class EffectManager {
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40 * duration, 10));
         this.lastNauseaEffectTime.put(playerId, currentTime);
+        long announceTime = currentTime + cooldown - 5000; // 5秒前のタイミング
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (player.isOnline()) {
+                    player.sendMessage(ChatColor.YELLOW + "[!] 吐き気まであと5秒です。");
+                }
+            }
+        }.runTaskLater(plugin, (announceTime - System.currentTimeMillis()) / 50);
 
 
         scheduleNextEffectActivation(player, "nausea", cooldown);
