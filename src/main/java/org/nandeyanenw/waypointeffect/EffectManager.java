@@ -38,7 +38,7 @@ public class EffectManager {
         this.startPointListener = new StartPointListener();
     }
 
-    public void forceActivateEffect(Player player, String effect,boolean isForced) {
+    public void forceActivateEffect(Player player, String effect, boolean isForced) {
         if (!isEffectEnabled(effect.toLowerCase())) return;
 
         switch (effect.toLowerCase()) {
@@ -62,29 +62,21 @@ public class EffectManager {
     public void activateKnockbackEffect(Player player, boolean isForced) {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
-        long cooldown = getCooldown("knockback", 300); // クールダウンの取得
+        long cooldown = getCooldown("knockback", 300);
         int strength = config.getInt("effects.settings.knockback.strength", 10);
 
-        // クールダウンチェック
         if (!isForced && (currentTime - lastKnockbackEffectTime.getOrDefault(playerId, 0L) < cooldown)) {
-            return; // クールダウン中ならば何もしない
+            return;
         }
 
-        // エフェクトの発動
         Vector direction = player.getLocation().getDirection().multiply(-strength);
         direction.setY(0);
         player.setVelocity(direction);
-
-        // 発動時間の更新
         lastKnockbackEffectTime.put(playerId, currentTime);
 
-        // 強制発動の場合は再発動をスケジュール
-        if (isForced) {
-            scheduleNextEffectActivation(player, "knockback", cooldown);
-        }
+        // 次の発動をスケジュール
+        scheduleNextEffectActivation(player, "knockback", cooldown);
     }
-
-
 
 
     public void activateImmobilizeEffect(Player player, boolean isForced) {
@@ -100,12 +92,10 @@ public class EffectManager {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40 * duration, 255));
         this.lastImmobilizeEffectTime.put(playerId, currentTime);
 
-        if (isForced) {
-            scheduleNextEffectActivation(player, "immobilize", cooldown);
-        }
+
+        scheduleNextEffectActivation(player, "immobilize", cooldown);
+
     }
-
-
 
 
     public void activateExplosionEffect(Player player, boolean isForced) {
@@ -120,12 +110,10 @@ public class EffectManager {
         player.getWorld().createExplosion(player.getLocation(), 0F, false);
         this.lastExplosionEffectTime.put(playerId, currentTime);
 
-        if (isForced) {
-            scheduleNextEffectActivation(player, "explosion", cooldown);
-        }
+
+        scheduleNextEffectActivation(player, "explosion", cooldown);
+
     }
-
-
 
 
     public void activateNauseaEffect(Player player, boolean isForced) {
@@ -141,11 +129,10 @@ public class EffectManager {
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40 * duration, 10));
         this.lastNauseaEffectTime.put(playerId, currentTime);
 
-        if (isForced) {
-            scheduleNextEffectActivation(player, "nausea", cooldown);
-        }
-    }
 
+        scheduleNextEffectActivation(player, "nausea", cooldown);
+
+    }
 
 
     private long getCooldown(String effectName, int defaultCooldown) {
@@ -161,7 +148,6 @@ public class EffectManager {
     }
 
     private void scheduleNextEffectActivation(Player player, String effect, long cooldown) {
-        // 以前のロジックを削除し、新たにエフェクトをスケジュールするロジックを追加
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -182,6 +168,7 @@ public class EffectManager {
                         break;
                 }
             }
-        }.runTaskTimer(plugin, 0L,cooldown / 50);
+        }.runTaskLater(plugin, cooldown / 50);
     }
 }
+
