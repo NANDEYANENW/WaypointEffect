@@ -15,11 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listener {
 
-    private StartPointListener startPointListener;
-
-
     private Location goalMinLocation;
     private Location goalMaxLocation;
+
+    private StartPointListener startPointListener;
 
     private ConfigManager configManager;
     private EffectManager effectManager;
@@ -41,8 +40,9 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
         startPointListener = new StartPointListener();
         // ゴールエリアの座標範囲を設定
         goalMinLocation = new Location(getServer().getWorld("world"), -10, 20, 999);
-        goalMaxLocation = new Location(getServer().getWorld("world"), 10, 20, 1013);
-        getServer().getPluginManager().registerEvents(new StartPointListener(),this);
+        goalMaxLocation = new Location(getServer().getWorld("world"), 10, 20, 1001);
+        getServer().getPluginManager().registerEvents(this,this);
+
     }
     public StartPointListener getStartPointListener() {
         return startPointListener;
@@ -134,17 +134,14 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
         }
     }
 
-
-
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Location playerLocation = player.getLocation();
 
+        // ゴール地点にプレイヤーが到達したかチェック
         if (isPlayerInsideGoal(playerLocation) && player.getGameMode() == GameMode.ADVENTURE) {
-
-            player.setGameMode(GameMode.SPECTATOR);
-
+            player.setGameMode(GameMode.SPECTATOR); // スペクテイターモードに切り替え
         }
     }
 
@@ -152,6 +149,10 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
         return location.getX() >= goalMinLocation.getX() && location.getX() <= goalMaxLocation.getX()
                 && location.getY() >= goalMinLocation.getY() && location.getY() <= goalMaxLocation.getY()
                 && location.getZ() >= goalMinLocation.getZ() && location.getZ() <= goalMaxLocation.getZ();
+    }
+    public ConfigManager getConfigManager(){
+        return configManager;
+
     }
 
     @Override
@@ -161,8 +162,5 @@ public class WaypointEffect extends JavaPlugin implements CommandExecutor,Listen
         saveConfig();
     }
 
-    public ConfigManager getConfigManager(){
-        return configManager;
 
-    }
 }

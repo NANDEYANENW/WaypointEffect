@@ -85,7 +85,7 @@ public class EffectManager {
         long cooldown = this.getCooldown("immobilize", 1800);
         int duration = this.config.getInt("effects.settings.immobilize.duration", 2);
 
-        if (!isForced && (currentTime - this.lastImmobilizeEffectTime.getOrDefault(playerId, 0L) < cooldown)) {
+        if (!isForced && (currentTime - this.lastImmobilizeEffectTime.getOrDefault(playerId, 20L) < cooldown)) {
             return;
         }
 
@@ -103,7 +103,7 @@ public class EffectManager {
         long currentTime = System.currentTimeMillis();
         long cooldown = this.getCooldown("explosion", 600);
 
-        if (!isForced && (currentTime - this.lastExplosionEffectTime.getOrDefault(playerId, 0L) < cooldown)) {
+        if (!isForced && (currentTime - this.lastExplosionEffectTime.getOrDefault(playerId, 20L) < cooldown)) {
             return;
         }
 
